@@ -1,15 +1,18 @@
 import os
 import xml.etree.ElementTree as ET
 import subprocess
+from pymystem3 import Mystem
 
 files = os.listdir('./conv')
 progr = open('prog_progress.txt', 'w')
+m = Mystem()
 #l = m.lemmatize(cont)
 for f in files:
     print (f)
-    if os.path.isdir('./newcpfull/'+f):
+    if os.path.isdir('./conv/'+f):
         continue
     xmlres = subprocess.check_output(['../lspl/bin/lspl-find.exe', '-p', '../no-v-pat.txt', '-s', '../pattern_names.txt', '-i', './conv/'+f])
+    
     #open('xml_res.txt', 'w')
     try:
         root = ET.fromstring(xmlres)
@@ -18,23 +21,17 @@ for f in files:
             #print (elem.tag)
             if len(elem):
              #   print ("Has children")
-                filename = './fitting_verbs/' + elem.attrib['name'].replace(' ', '') + '.txt'
+                filename = './context/' + elem.attrib['name'].replace(' ', '') + '.txt'
                 fn = open(filename, 'a')
                 for ch in elem:
-               #     print (ch)
-               #     print (ch.text)
-               #     print (ch.attrib)
                     s = ch[0].text
                     s = s.replace('\n', ' ').replace('\r', '')
-                    sarr = s.split(' ')
-                #    print(sarr[0], "-----", v[0])
-                    fn.write(sarr[0] + '\n')
+                    fn.write(s + '\n')
                 fn.close()
-        progr.write(f + "\n")
     except:
         f = open('./find_errors/' + f, 'w')
         f.write(str(xmlres, 'windows-1251'))
         f.close()
         continue
-progr.close()
+    progr.write(f + "\n")
 
