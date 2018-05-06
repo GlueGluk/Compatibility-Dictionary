@@ -1,0 +1,13 @@
+use strict;
+use Encode::Detect::Detector;
+open (FFILE, $ARGV[0]);
+open (SFILE, ">$ARGV[1]");
+local $/ = undef;
+my $line = <FFILE>;
+my $encoding_name = Encode::Detect::Detector::detect($line);
+$line =~ s/ё/е/gis;
+use Encode;
+Encode::from_to($line, $encoding_name, "windows-1251");
+print SFILE "$line";
+close FFILE;
+close SFILE;
