@@ -1,9 +1,11 @@
 import os
 import subprocess
 
-files = os.listdir('./textfiles1')
+if not(os.path.isdir("converted")):
+    os.mkdir("converted")
+files = os.listdir('./textfiles')
 for f in files:
     print (f)
-    if os.path.isdir('./textfiles1/'+f):
+    if os.path.isdir('./textfiles/'+f):
         continue
-    subprocess.run(['perl', '../perl_scripts/ext_convert_to.pl', './textfiles1/'+f, './conv/'+f])
+    subprocess.run(['perl', './ext_convert_to.pl', './textfiles/'+f, './converted/'+f])

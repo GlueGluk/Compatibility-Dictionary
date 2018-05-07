@@ -114,8 +114,8 @@ os.chdir('./'+"library")
 for url in f3:
     if (url.isspace() == False) :
         print("----- starting: " + url)
-        dirname = get_name(url)
         url = url[:-1]
+        dirname = get_name(url)
         if not(os.path.isdir(dirname)):
             #shutil.rmtree(dirname)
             os.mkdir(dirname)

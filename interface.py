@@ -131,7 +131,6 @@ class Interface(QWidget):
             self.openContextWindow(self.SearchVerbs[self.FoundVerb][item.text()]['context'], item.text())
         elif (self.FoundNoun):
             self.openContextWindow(self.SearchNouns[self.FoundNoun][item.text()]['context'], item.text())
-        print(item.text())
         
     def openContextWindow(self, context, word):
         win = QDialog()
@@ -149,44 +148,36 @@ class Interface(QWidget):
     def prepareData(self):
         self.SearchNouns = {};
         self.SearchVerbs = {};
-        files = os.listdir('./1/cont_res')
-        for f in files:
-            print (f)
-            fc = open('./1/cont_res/'+f)
-            templ = fc.readline()
-            m = re.search(r'N1\<([^\s,\>]*).*\>', templ)
-            if m:
-                noun = m.group(1)
-                for line in fc:
-                    print(line)
-                    l = line.split(' : ', maxsplit=1)
-                    print(l)
-                    verb = l[0]
-                    cont = l[1]
-                    cont = cont[:-1]
-                    if (self.SearchNouns.get(noun)):
-                        if (self.SearchNouns[noun].get(verb)):
-                            self.SearchNouns[noun][verb]['amount'] += 1
-                            self.SearchNouns[noun][verb]['context'].append(cont)
-                        else:
-                            d = {'amount' : 1, 'context' : [cont]}
-                            self.SearchNouns[noun].update([(verb, d)])
-                    else:
-                        d1 = {'amount' : 1, 'context' : [cont]}
-                        d2 = {verb : d1}
-                        self.SearchNouns.update([(noun, d2)])
-                    if (self.SearchVerbs.get(verb)):
-                        if (self.SearchVerbs[verb].get(noun)):
-                            self.SearchVerbs[verb][noun]['amount'] += 1
-                            self.SearchVerbs[verb][noun]['context'].append(cont)
-                        else:
-                            d = {'amount' : 1, 'context' : [cont]}
-                            self.SearchVerbs[verb].update([(noun, d)])
-                    else:
-                        d1 = {'amount' : 1, 'context' : [cont]}
-                        d2 = {noun : d1}
-                        self.SearchVerbs.update([(verb, d2)])
-        
+        fc = open('./interface_data.txt')
+        for line in fc:
+            l = line.split(' : ', maxsplit=2)
+            verb = l[0]
+            noun = l[1]
+            cont = l[2]
+            cont = cont[:-1]
+            if (self.SearchNouns.get(noun)):
+                if (self.SearchNouns[noun].get(verb)):
+                    self.SearchNouns[noun][verb]['amount'] += 1
+                    self.SearchNouns[noun][verb]['context'].append(cont)
+                else:
+                    d = {'amount' : 1, 'context' : [cont]}
+                    self.SearchNouns[noun].update([(verb, d)])
+            else:
+                d1 = {'amount' : 1, 'context' : [cont]}
+                d2 = {verb : d1}
+                self.SearchNouns.update([(noun, d2)])
+            if (self.SearchVerbs.get(verb)):
+                if (self.SearchVerbs[verb].get(noun)):
+                    self.SearchVerbs[verb][noun]['amount'] += 1
+                    self.SearchVerbs[verb][noun]['context'].append(cont)
+                else:
+                    d = {'amount' : 1, 'context' : [cont]}
+                    self.SearchVerbs[verb].update([(noun, d)])
+            else:
+                d1 = {'amount' : 1, 'context' : [cont]}
+                d2 = {noun : d1}
+                self.SearchVerbs.update([(verb, d2)])
+    
 app = QApplication(sys.argv)
 obj = Interface()
 obj.Run()
